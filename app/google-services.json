@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "678841397433",
+    "project_id": "gupp-17565",
+    "storage_bucket": "gupp-17565.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678841397433:android:52d94a48146eaf8d1dab68",
+        "android_client_info": {
+          "package_name": "com.techsensei.gupp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678841397433-jhgvv31k52qp31m23lfkje68h17q9k8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2nrfPLYQRa4g_F5MuRpXkTX9wznUZp6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678841397433-jhgvv31k52qp31m23lfkje68h17q9k8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

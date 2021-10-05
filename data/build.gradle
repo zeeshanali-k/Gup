@@ -14,6 +14,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField("String", "APP_BASE_URL", APP_BASE_URL)
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -46,11 +48,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     // Hilt dependency injection
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_android_compiler_version"
-// When using Kotlin.
-    kapt "androidx.hilt:hilt-compiler:$hilt_kotlin_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
 
 //    Realtime chat
     implementation 'com.pusher:pusher-java-client:2.2.6'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation project(path: ':domain')
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 }
