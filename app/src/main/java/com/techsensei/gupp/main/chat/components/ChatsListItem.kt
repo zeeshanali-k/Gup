@@ -11,15 +11,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.techsensei.domain.model.Room
 import com.techsensei.domain.model.User
 import com.techsensei.gupp.R
 import com.techsensei.gupp.ui.theme.*
+import com.techsensei.gupp.utils.constants.AppConstants
 
+@ExperimentalCoilApi
 @Composable
-fun ChatItem(onItemClick:(id:Int)->Unit,user: User) {
+fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room) {
 
     Box(
         Modifier
@@ -31,14 +41,16 @@ fun ChatItem(onItemClick:(id:Int)->Unit,user: User) {
             Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(15))
+                .clickable { onItemClick(room.id) }
                 .background(ItemBg)
-                .padding(7.dp)
-                .clickable { onItemClick(user.id!!) },
+                .padding(7.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             Image(
-                painter = painterResource(id = user.profileImageTest),
+                painter = rememberImagePainter(
+                    data = room.user.profileImage ?: R.drawable.man_avatar
+                ),
                 contentDescription = "Chat Person DP",
                 Modifier
                     .size(50.dp)
@@ -54,15 +66,39 @@ fun ChatItem(onItemClick:(id:Int)->Unit,user: User) {
 
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = user.name!!,
-                    fontWeight = Typography.h2.fontWeight,
-                    fontSize = Typography.h2.fontSize,
-                    fontFamily = Typography.h2.fontFamily,
-                    color = Typography.h2.color,
+                    text = room.user.name!!,
+                    style = Typography.h2,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp)
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = room.lastMessage.message+room.lastMessage.message+room.lastMessage.message,
+                        style = Typography.caption,
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .weight(3f),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = AppConstants.getTimeFromDate(room.lastMessage.messageTime!!),
+                        style = Typography.caption,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .weight(1f)
+                        ,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+
+                }
+
 
             }
 
@@ -71,11 +107,12 @@ fun ChatItem(onItemClick:(id:Int)->Unit,user: User) {
 }
 
 @Composable
-fun ChatHeader(letter:String) {
+fun ChatHeader(letter: String) {
     Text(
         text = letter,
         style = Typography.caption,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .background(AppBg2)
             .padding(5.dp)
     )

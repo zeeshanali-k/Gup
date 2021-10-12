@@ -1,5 +1,7 @@
 package com.techsensei.gupp.utils
 
+import androidx.navigation.NavType
+import androidx.navigation.compose.navArgument
 import com.techsensei.gupp.utils.constants.ArgConstants
 
 sealed class Screen(val title: String, val route: String) {
@@ -13,10 +15,15 @@ sealed class Screen(val title: String, val route: String) {
 
 //    Main flow screens
     object HomeScreen:Screen("Home", "route_home")
-//    class ChatScreen:Screen(title, route)
-//    class ChatsListScreen:Screen(title, route)
-//    class ProfileScreen(title: String, route: String) :Screen(title, route)
-//    class FriendsScreen(title: String, route: String) :Screen(title, route)
-////    For searching users
-//    class SearchScreen(title: String, route: String) :Screen(title, route)
+    object ChatScreen:Screen("Chat", "route_chat_screen/{${ArgConstants.ROOM_ID_ARG}}"){
+        fun getArgsWithType() =
+            listOf(navArgument(ArgConstants.ROOM_ID_ARG) {
+                type = NavType.IntType
+                nullable = false
+                defaultValue = -1
+            })
+
+
+        fun getRouteWithArgument(roomId:Int) = "route_chat_screen/$roomId"
+    }
 }

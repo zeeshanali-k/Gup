@@ -23,9 +23,21 @@ val Typography = Typography(
         color = ButtonTextColor
     ),
     h2 = TextStyle(
-        fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),
-        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily(listOf(Font(R.font.josefinsans_bold))),
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
+        color = DarkTextColor
+    ),
+    h4 = TextStyle(
+        fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        color = DarkTextColor
+    ),
+    h5 = TextStyle(
+        fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
         color = DarkTextColor
     ),
     h1 = TextStyle(

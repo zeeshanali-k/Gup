@@ -48,7 +48,7 @@ fun HomeScreen(mainNavController: NavController) {
             startDestination = Tabs.ChatsTab.route
         ) {
             composable(Tabs.ChatsTab.route) {
-                ChatsTab(navController)
+                ChatsTab(mainNavController)
             }
             composable(Tabs.UsersListTab.route) {
                 UsersTab(navController)

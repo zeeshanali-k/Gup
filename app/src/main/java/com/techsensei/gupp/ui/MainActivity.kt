@@ -12,16 +12,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.techsensei.gupp.authentication.login_register.LoginRegisterScreen
+import com.techsensei.gupp.main.chat.chat.ChatMessagesScreen
 import com.techsensei.gupp.main.home.HomeScreen
 import com.techsensei.gupp.ui.splash.SplashScreen
 import com.techsensei.gupp.ui.theme.GupTheme
 import com.techsensei.gupp.utils.Screen
+import com.techsensei.gupp.utils.constants.ArgConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,22 +39,32 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun AppFlow(navController: NavHostController) {
-    NavHost(navController = navController,startDestination = Screen.SplashScreen.route){
+    NavHost(navController = navController, startDestination = Screen.SplashScreen.route) {
 //        Splash
-        composable(Screen.SplashScreen.route){
+        composable(Screen.SplashScreen.route) {
             SplashScreen(navController)
         }
 //        Login Register Screen
-        composable(Screen.LoginRegisterScreen.route){
+        composable(Screen.LoginRegisterScreen.route) {
             LoginRegisterScreen(navController)
         }
 //        Home Screen
-        composable(Screen.HomeScreen.route){
+        composable(Screen.HomeScreen.route) {
             HomeScreen(navController)
+        }
+//        Home Screen
+        composable(
+            Screen.ChatScreen.route,
+            arguments = Screen.ChatScreen.getArgsWithType()
+        ) { navBSE ->
+            ChatMessagesScreen(
+                navController
+            )
         }
 
     }
 }
+
 /*
 
 @Preview(showBackground = true)

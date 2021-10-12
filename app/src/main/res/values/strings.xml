@@ -8,4 +8,7 @@
     <string name="invalid_password_error">Enter a valid password</string>
     <string name="invalid_name_error">Enter a valid name</string>
     <string name="password_length_error">Password length must be at least 6</string>
+    <string name="app_slogan">Lets gup!</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
