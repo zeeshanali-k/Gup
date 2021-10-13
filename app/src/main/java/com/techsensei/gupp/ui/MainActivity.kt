@@ -19,6 +19,7 @@ import com.techsensei.gupp.ui.theme.GupTheme
 import com.techsensei.gupp.utils.Screen
 import com.techsensei.gupp.utils.constants.ArgConstants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalAnimationApi
 @AndroidEntryPoint
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalCoroutinesApi
 @ExperimentalAnimationApi
 @Composable
 fun AppFlow(navController: NavHostController) {

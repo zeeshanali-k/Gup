@@ -12,5 +12,6 @@ object AppConstants {
     fun getTimeSdf() = SimpleDateFormat("hh:mm aaa", Locale.getDefault())
 
     fun getTimeFromDate(date:String) = getTimeSdf().format(getServerSdf().parse(date))
+    fun getCurrentTimeAndDate() = getServerSdf().format(Date())
 
 }

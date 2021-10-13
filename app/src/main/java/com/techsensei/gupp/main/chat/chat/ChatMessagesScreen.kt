@@ -21,10 +21,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.techsensei.data.network.dto.toUser
 import com.techsensei.domain.model.Chat
 import com.techsensei.domain.model.Room
@@ -36,26 +38,43 @@ import com.techsensei.gupp.main.chat.chat.components.MessagesSection
 import com.techsensei.gupp.main.chat.chat.components.MessageInput
 import com.techsensei.gupp.ui.theme.AppBg
 import com.techsensei.gupp.ui.theme.Typography
+import com.techsensei.gupp.utils.PrefsProvider
+import com.techsensei.gupp.utils.constants.AppConstants
 import com.techsensei.gupp.utils.constants.ArgConstants
+import com.techsensei.gupp.utils.constants.PrefConstants
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatMessagesScreen"
 
+@ExperimentalCoroutinesApi
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun ChatMessagesScreen(
     navController: NavController,
     chatMessagesViewModel: ChatMessagesViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val prefsProvider by remember {
+        mutableStateOf(PrefsProvider(context))
+    }
+    val currentUserId by remember {
+        mutableStateOf(prefsProvider.getInt(PrefConstants.USER_ID))
+    }
+    val currentUserName by remember {
+        mutableStateOf(prefsProvider.getString(PrefConstants.USER_NAME)!!)
+    }
     val coroutineScope = rememberCoroutineScope()
     val lazyColumnState = rememberLazyListState()
     val chatMessagesState = chatMessagesViewModel.chatMessagesState
-    val messageStatusState = chatMessagesViewModel.chatEvent
-    Log.d(TAG, "ChatMessagesScreen: "+messageStatusState.value?.toString())
 
     val room =
         navController.previousBackStackEntry?.arguments!!.getParcelable<Room>(ArgConstants.ROOM_ARG)!!
+    LaunchedEffect(key1 = true) {
+        chatMessagesViewModel.registerChatChannel(room.id, currentUserId)
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -67,7 +86,9 @@ fun ChatMessagesScreen(
         bottomBar = {
             ChatMessagesBottomBar(
                 chatMessagesState, chatMessagesViewModel, room, coroutineScope,
-                lazyColumnState
+                lazyColumnState,
+                currentUserId,
+                currentUserName
             )
         }
     ) {
@@ -86,7 +107,8 @@ fun ChatMessagesScreen(
                             bottom = it.calculateBottomPadding(),
                             top = it.calculateTopPadding()
                         ), lazyColumnState,
-                    chatMessagesState.value.messages?.value ?: listOf()
+                    chatMessagesState.value.messages?.value ?: listOf(),
+                    coroutineScope, currentUserId
                 )
             } else {
                 Text(text = "No messages found", style = Typography.h2, color = Color.Red)
@@ -102,7 +124,9 @@ fun ChatMessagesBottomBar(
     chatMessagesViewModel: ChatMessagesViewModel,
     room: Room,
     coroutineScope: CoroutineScope,
-    lazyColumnState: LazyListState
+    lazyColumnState: LazyListState,
+    currentUserId : Int,
+    currentUserName : String
 ) {
 
     AnimatedVisibility(
@@ -117,16 +141,18 @@ fun ChatMessagesBottomBar(
             .fillMaxWidth()
             .padding(5.dp),
             onSendClicked = {
-                chatMessagesViewModel.chatMessagesState
-                val newMessage = Chat(room.user, it, null, room.id)
-                val tempList = mutableListOf<Chat>()
-                tempList.addAll(chatMessagesState.value.messages!!.value!!)
-                tempList.add(newMessage)
-                chatMessagesState.value.messages!!.value = tempList
+//                chatMessagesViewModel.chatMessagesState
+                val newMessage = Chat(
+                    room.user.copy(id = currentUserId,name = currentUserName),
+                    it,
+                    AppConstants.getCurrentTimeAndDate(),
+                    room.id
+                )
+                chatMessagesViewModel.addMessageToChat(newMessage)
                 coroutineScope.launch {
                     chatMessagesState.value.messages?.let {
                         it.value?.let { chatsList ->
-                            lazyColumnState.scrollToItem(chatsList.size)
+                            lazyColumnState.scrollToItem(chatsList.size - 1)
                         }
                     }
                     chatMessagesViewModel.sendMessage(newMessage)
@@ -134,3 +160,4 @@ fun ChatMessagesBottomBar(
             })
     }
 }
+

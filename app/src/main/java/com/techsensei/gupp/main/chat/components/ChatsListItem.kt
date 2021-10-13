@@ -1,5 +1,6 @@
 package com.techsensei.gupp.main.chat.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +30,7 @@ import com.techsensei.gupp.utils.constants.AppConstants
 
 @ExperimentalCoilApi
 @Composable
-fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room) {
+fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room, currentUserId: Int) {
 
     Box(
         Modifier
@@ -76,8 +77,16 @@ fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Log.d(TAG, "ChatsListItem: ${room.user.id}")
+                    Log.d(TAG, "ChatsListItem: $currentUserId")
                     Text(
-                        text = room.lastMessage.message+room.lastMessage.message+room.lastMessage.message,
+                        text =
+                        (if (room.lastMessage.user.id == currentUserId)
+                            "You: "
+                        else
+                            "${room.user.name}: ") +
+                        room.lastMessage.message,
+
                         style = Typography.caption,
                         modifier = Modifier
                             .padding(2.dp)
@@ -91,8 +100,7 @@ fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room) {
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .padding(2.dp)
-                            .weight(1f)
-                        ,
+                            .weight(1f),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
@@ -117,6 +125,7 @@ fun ChatHeader(letter: String) {
             .padding(5.dp)
     )
 }
+private const val TAG = "ChatsListItem"
 //
 //@Preview
 //@Composable

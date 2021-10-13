@@ -4,14 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Chat(
-    val user: User?,
+    val user: User,
     val message: String,
     val messageTime: String? = null,
     val roomId : Int,
     val id:Int = -1
 ) :Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readParcelable(User::class.java.classLoader),
+        parcel.readParcelable(User::class.java.classLoader)!!,
         parcel.readString()!!,
         parcel.readString(),
         parcel.readInt(),

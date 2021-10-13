@@ -6,6 +6,7 @@ import com.techsensei.domain.use_case.auth.RegisterUserUseCase
 import com.techsensei.domain.use_case.auth.VerifyUserUseCase
 import com.techsensei.domain.use_case.chat.GetAllChats
 import com.techsensei.domain.use_case.chat.GetChatMessages
+import com.techsensei.domain.use_case.chat.RegisterChatEvent
 import com.techsensei.domain.use_case.chat.SendMessage
 import dagger.Module
 import dagger.Provides
@@ -45,6 +46,12 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideSendMessage(chatRepository: ChatRepository): SendMessage {
         return SendMessage(chatRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideRegisterChatEvent(chatRepository: ChatRepository): RegisterChatEvent {
+        return RegisterChatEvent(chatRepository)
     }
 
 }

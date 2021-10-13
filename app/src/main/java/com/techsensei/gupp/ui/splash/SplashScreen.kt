@@ -46,7 +46,7 @@ fun SplashScreen(navController: NavHostController) {
             )
         } else {
             navController.navigator(
-                Screen.HomeScreen.route, Screen.LoginRegisterScreen.route,
+                Screen.LoginRegisterScreen.route, Screen.SplashScreen.route,
                 true
             )
         }

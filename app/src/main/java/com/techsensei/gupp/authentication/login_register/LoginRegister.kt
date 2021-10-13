@@ -68,6 +68,7 @@ fun checkLogin(
             val prefsProvider = PrefsProvider(context)
             prefsProvider.setBool(PrefConstants.IS_LOGGED_IN, true)
             prefsProvider.setString(PrefConstants.USER_NAME, it.name!!)
+            prefsProvider.setInt(PrefConstants.USER_ID, it.id!!)
             prefsProvider.setString(PrefConstants.USER_EMAIL, it.email!!)
 //            Navigate to Home screen
             navController.navigator(

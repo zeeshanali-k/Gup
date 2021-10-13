@@ -55,7 +55,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
+//    Realtime chat
+    implementation 'com.pusher:pusher-java-client:2.2.6'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation project(path: ':domain')
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
 }

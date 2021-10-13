@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,10 @@ private const val TAG = "ChatsTab"
 fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val chatsState = chatsViewModel.chatsState
+    val currentUserId = remember {
+        PrefsProvider(context).getInt(PrefConstants.USER_ID)
+    }
+
     LaunchedEffect(key1 = true) {
 //        if (chatsState.value.chats!=null) return@LaunchedEffect
         chatsViewModel.getUserChats(
@@ -55,94 +60,99 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
         )
     }
     val coroutineScope = rememberCoroutineScope()
-    if (!chatsState.value.isLoading) {
-        val scaffoldState = rememberScaffoldState()
-        LaunchedEffect(key1 = chatsState) {
-            chatsState.value.message?.let {
-                if (it.isEmpty().not()) {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        it, actionLabel = context.getString(R.string.dismiss),
-                        duration = SnackbarDuration.Long
-                    )
-                }
-            }
-        }
-
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(AppBg),
-            scaffoldState = scaffoldState,
-            floatingActionButton = {
-                if (chatsState.value.message == null) {
-                    FloatingActionButton(onClick = {
-                        Toast.makeText(
-                            context,
-                            "Message",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_round_chat_24),
-                            contentDescription = "Start New Chat", tint = IconImageColor
+    chatsState.value?.let {chatsStateVal->
+        if (!chatsStateVal.isLoading) {
+            val scaffoldState = rememberScaffoldState()
+            LaunchedEffect(key1 = chatsState) {
+                chatsStateVal.message?.let {
+                    if (it.isEmpty().not()) {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            it, actionLabel = context.getString(R.string.dismiss),
+                            duration = SnackbarDuration.Long
                         )
                     }
                 }
             }
-        ) {
-            if (chatsState.value.message == null) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(PrimaryDark)
-                ) {
-                    val lazyListState = rememberLazyListState()
-                    LazyColumn(
-                        state = lazyListState,
-                        contentPadding = PaddingValues(bottom = 60.dp)
-                    ) {
-                        items(chatsState.value.chats?: listOf()) {room->
-                            ChatsListItem(onItemClick = {
-                                navController.currentBackStackEntry?.arguments =
-                                    Bundle().apply {
-                                        putParcelable(ArgConstants.ROOM_ARG, room)
-                                    }
-                                Log.d(TAG, "ChatsTab: "+Screen.ChatScreen.getRouteWithArgument(it))
-                                navController.navigate(Screen.ChatScreen.getRouteWithArgument(it)){
-                                    this.anim {
-                                        this.enter = R.anim.onesignal_fade_in
-                                        this.exit = R.anim.onesignal_fade_out
-                                        this.popEnter = R.anim.onesignal_fade_out
-                                        this.popExit = R.anim.onesignal_fade_in
-                                    }
-                                }
-                            }, room = room)
+
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(AppBg),
+                scaffoldState = scaffoldState,
+                floatingActionButton = {
+                    if (chatsStateVal.message == null) {
+                        FloatingActionButton(onClick = {
+                            Toast.makeText(
+                                context,
+                                "Message",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_round_chat_24),
+                                contentDescription = "Start New Chat", tint = IconImageColor
+                            )
                         }
                     }
-//            Go to top button
-                    val isNotFirstItem = lazyListState.firstVisibleItemIndex > 0
-                    AnimatedVisibility(
-                        visible = isNotFirstItem,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(5.dp)
+                }
+            ) {
+                if (chatsStateVal.message == null) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(PrimaryDark)
                     ) {
-                        GoToTopButton {
-                            coroutineScope.launch {
-                                lazyListState.animateScrollToItem(0)
+                        val lazyListState = rememberLazyListState()
+                        LazyColumn(
+                            state = lazyListState,
+                            contentPadding = PaddingValues(bottom = 60.dp)
+                        ) {
+                            items(chatsStateVal.chats ?: listOf()) { room ->
+                                ChatsListItem(onItemClick = {
+                                    navController.currentBackStackEntry?.arguments =
+                                        Bundle().apply {
+                                            putParcelable(ArgConstants.ROOM_ARG, room)
+                                        }
+                                    Log.d(
+                                        TAG,
+                                        "ChatsTab: " + Screen.ChatScreen.getRouteWithArgument(it)
+                                    )
+                                    navController.navigate(Screen.ChatScreen.getRouteWithArgument(it)) {
+                                        this.anim {
+                                            this.enter = R.anim.onesignal_fade_in
+                                            this.exit = R.anim.onesignal_fade_out
+                                            this.popEnter = R.anim.onesignal_fade_out
+                                            this.popExit = R.anim.onesignal_fade_in
+                                        }
+                                    }
+                                }, room = room,currentUserId = currentUserId)
                             }
                         }
-                    }
+//            Go to top button
+                        val isNotFirstItem = lazyListState.firstVisibleItemIndex > 0
+                        AnimatedVisibility(
+                            visible = isNotFirstItem,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(5.dp)
+                        ) {
+                            GoToTopButton {
+                                coroutineScope.launch {
+                                    lazyListState.animateScrollToItem(0)
+                                }
+                            }
+                        }
 
+                    }
                 }
             }
-        }
-    } else if (chatsState.value.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+        } else if (chatsStateVal.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }

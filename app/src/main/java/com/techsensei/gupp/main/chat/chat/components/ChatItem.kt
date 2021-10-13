@@ -15,22 +15,20 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.techsensei.domain.model.Chat
-import com.techsensei.domain.model.User
-import com.techsensei.gupp.ui.theme.*
-import com.techsensei.gupp.utils.PrefsProvider
-import com.techsensei.gupp.utils.constants.PrefConstants
+import com.techsensei.gupp.ui.theme.AppBg
+import com.techsensei.gupp.ui.theme.AppBg2
+import com.techsensei.gupp.ui.theme.SecondaryDark
+import com.techsensei.gupp.ui.theme.Typography
 
 @Composable
-fun ChatItem(chat: Chat) {
+fun ChatItem(chat: Chat,currentUserId:Int) {
 //    val context = LocalContext.current
     val isCurrentUser by remember {
-        mutableStateOf(1 == chat.user!!.id)
+        mutableStateOf(currentUserId == chat.user.id)
     }
 
     Column(
@@ -45,13 +43,13 @@ fun ChatItem(chat: Chat) {
             Modifier
                 .fillMaxWidth(0.80f)
                 .drawBehind {
-                    ItemBG(7.dp, 7.dp, this, isCurrentUser)
+                    itemBg(7.dp, 7.dp, this, isCurrentUser)
                 }
                 .padding(6.dp)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = chat.user!!.name!!,
+                    text = chat.user.name!!,
                     style = Typography.h4,
                     color = SecondaryDark,
                     modifier = Modifier.padding(start = 5.dp, end = 5.dp, top = 2.dp),
@@ -78,7 +76,7 @@ fun ChatItem(chat: Chat) {
 
 
 //@Composable
-fun ItemBG(cornerSizeX: Dp, cornerSizeY: Dp, drawScope: DrawScope, isCurrentUser: Boolean) {
+fun itemBg(cornerSizeX: Dp, cornerSizeY: Dp, drawScope: DrawScope, isCurrentUser: Boolean) {
     drawScope.apply {
         val path = Path().apply {
             moveTo(0f, 0f)

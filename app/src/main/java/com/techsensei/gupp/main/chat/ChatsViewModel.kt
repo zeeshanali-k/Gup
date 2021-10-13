@@ -23,32 +23,33 @@ class ChatsViewModel @Inject constructor(
 //    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _chatsState: MutableState<ChatsState> = mutableStateOf(ChatsState(isLoading = true))
-    val chatsState: State<ChatsState> = _chatsState
+    private val _chatsState: MutableState<ChatsState?> = mutableStateOf(null)
+    val chatsState: State<ChatsState?> = _chatsState
     private val TAG = "ChatsViewModel"
 
     fun getUserChats(userId: Int) {
 //        val userId = savedStateHandle.get<Int>(ArgConstants.USER_ID)!!
 //        Log.d(TAG, "user id: $userId")
-        _chatsState.value = ChatsState(isLoading = true)
+//        _chatsState.value = ChatsState(isLoading = true)
+        if (chatsState.value?.chats!=null) return
         viewModelScope.launch(Dispatchers.IO) {
-            getAllChats(1).collectLatest {
+            getAllChats(userId).collectLatest {
                 when (it) {
                     is Resource.Success -> _chatsState.value = chatsState.value
-                        .copy(
+                        ?.copy(
                             isLoading = false,
                             chats = it.data
                         )
 
                     is Resource.Error -> _chatsState.value =
-                        _chatsState.value.copy(
+                        _chatsState.value?.copy(
                             isLoading = false,
                             message = it.message
                         )
                     is Resource.Loading -> _chatsState.value =
-                        chatsState.value.copy(
+                        chatsState.value?.copy(
                             isLoading = true
-                        )
+                        )?: ChatsState(isLoading = true)
                 }
             }
         }
