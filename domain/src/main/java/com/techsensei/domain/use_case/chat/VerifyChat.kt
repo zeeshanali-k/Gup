@@ -6,11 +6,10 @@ import com.techsensei.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetAllChats(private val chatRepository: ChatRepository) {
-    private val TAG = "GetAllChats"
-    operator fun invoke(userId: Int):Flow<Resource<List<Room>>> = flow {
-        emit(Resource.Loading())
-        emit(chatRepository.getUserChats(userId))
+class VerifyChat (private val chatRepository: ChatRepository) {
+
+    operator fun invoke(userId:Int,chatUserId:Int):Flow<Resource<Room>> = flow{
+        emit(chatRepository.verifyChat(userId, chatUserId))
     }
 
 }

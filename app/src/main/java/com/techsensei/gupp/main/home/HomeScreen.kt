@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import com.techsensei.gupp.main.chat.ChatsTab
 import com.techsensei.gupp.main.home.components.HomeBottomBar
 import com.techsensei.gupp.main.home.components.HomeTopBar
@@ -22,6 +23,7 @@ import com.techsensei.gupp.main.profile.ProfileTab
 import com.techsensei.gupp.main.users.UsersTab
 import com.techsensei.gupp.utils.Tabs
 
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun HomeScreen(mainNavController: NavController) {
@@ -51,13 +53,13 @@ fun HomeScreen(mainNavController: NavController) {
                 ChatsTab(mainNavController)
             }
             composable(Tabs.UsersListTab.route) {
-                UsersTab(navController)
+                UsersTab(mainNavController)
             }
             composable(Tabs.NotificationsTab.route) {
-                NotificationsTab(navController)
+                NotificationsTab(mainNavController)
             }
             composable(Tabs.ProfileTab.route) {
-                ProfileTab(navController)
+                ProfileTab(mainNavController)
             }
         }
 

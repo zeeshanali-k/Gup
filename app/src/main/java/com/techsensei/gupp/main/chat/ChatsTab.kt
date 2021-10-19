@@ -59,9 +59,10 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                 .getInt(PrefConstants.USER_ID)
         )
     }
+
     val coroutineScope = rememberCoroutineScope()
-    chatsState.value?.let {chatsStateVal->
-        if (!chatsStateVal.isLoading) {
+
+    chatsState.value?.let { chatsStateVal ->
             val scaffoldState = rememberScaffoldState()
             LaunchedEffect(key1 = chatsState) {
                 chatsStateVal.message?.let {
@@ -79,7 +80,7 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                     .fillMaxSize()
                     .background(AppBg),
                 scaffoldState = scaffoldState,
-                floatingActionButton = {
+                /*floatingActionButton = {
                     if (chatsStateVal.message == null) {
                         FloatingActionButton(onClick = {
                             Toast.makeText(
@@ -94,14 +95,17 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                             )
                         }
                     }
-                }
+                }*/
             ) {
-                if (chatsStateVal.message == null) {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(PrimaryDark)
-                    ) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(PrimaryDark)
+                ) {
+
+                    if (chatsStateVal.isLoading) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    } else if (chatsStateVal.message == null) {
                         val lazyListState = rememberLazyListState()
                         LazyColumn(
                             state = lazyListState,
@@ -113,10 +117,6 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                                         Bundle().apply {
                                             putParcelable(ArgConstants.ROOM_ARG, room)
                                         }
-                                    Log.d(
-                                        TAG,
-                                        "ChatsTab: " + Screen.ChatScreen.getRouteWithArgument(it)
-                                    )
                                     navController.navigate(Screen.ChatScreen.getRouteWithArgument(it)) {
                                         this.anim {
                                             this.enter = R.anim.onesignal_fade_in
@@ -125,7 +125,7 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                                             this.popExit = R.anim.onesignal_fade_in
                                         }
                                     }
-                                }, room = room,currentUserId = currentUserId)
+                                }, room = room, currentUserId = currentUserId)
                             }
                         }
 //            Go to top button
@@ -146,15 +146,7 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                     }
                 }
             }
-        } else if (chatsStateVal.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
         }
-    }
 }
 
 fun getDummyChatData(): List<User> {

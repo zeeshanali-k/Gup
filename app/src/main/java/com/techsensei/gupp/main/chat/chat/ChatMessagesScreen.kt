@@ -72,9 +72,14 @@ fun ChatMessagesScreen(
 
     val room =
         navController.previousBackStackEntry?.arguments!!.getParcelable<Room>(ArgConstants.ROOM_ARG)!!
+//    Getting messages
     LaunchedEffect(key1 = true) {
-        chatMessagesViewModel.registerChatChannel(room.id, currentUserId)
+        if (room.id == 0)
+            chatMessagesViewModel.verifyUsersChat(currentUserId,room.user.id!!)
+        else
+            chatMessagesViewModel.registerChatChannel(currentUserId)
     }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -146,7 +151,7 @@ fun ChatMessagesBottomBar(
                     room.user.copy(id = currentUserId,name = currentUserName),
                     it,
                     AppConstants.getCurrentTimeAndDate(),
-                    room.id
+                    0 //Pass anything here will be set in viewModel
                 )
                 chatMessagesViewModel.addMessageToChat(newMessage)
                 coroutineScope.launch {

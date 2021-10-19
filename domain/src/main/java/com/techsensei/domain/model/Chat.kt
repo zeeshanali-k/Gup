@@ -7,7 +7,7 @@ data class Chat(
     val user: User,
     val message: String,
     val messageTime: String? = null,
-    val roomId : Int,
+    var roomId : Int,
     val id:Int = -1
 ) :Parcelable {
     constructor(parcel: Parcel) : this(

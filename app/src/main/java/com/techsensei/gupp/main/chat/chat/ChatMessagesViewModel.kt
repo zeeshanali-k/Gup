@@ -12,6 +12,7 @@ import com.techsensei.domain.model.Resource
 import com.techsensei.domain.use_case.chat.GetChatMessages
 import com.techsensei.domain.use_case.chat.RegisterChatEvent
 import com.techsensei.domain.use_case.chat.SendMessage
+import com.techsensei.domain.use_case.chat.VerifyChat
 import com.techsensei.gupp.utils.constants.ArgConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,10 +28,11 @@ class ChatMessagesViewModel @Inject constructor(
     private val getChatMessages: GetChatMessages,
     private val sendChatMessage: SendMessage,
     private val registerChatEvent: RegisterChatEvent,
+    private val verifyChat: VerifyChat,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val roomId: Int = savedStateHandle.get<Int>(ArgConstants.ROOM_ID_ARG)!!
+    private var roomId: Int = savedStateHandle.get<Int>(ArgConstants.ROOM_ID_ARG)!!
     private val _chatMessagesState: MutableState<ChatMessagesState> =
         mutableStateOf(ChatMessagesState(isLoading = true))
 
@@ -40,20 +42,25 @@ class ChatMessagesViewModel @Inject constructor(
 
 
     init {
-        getCurrentChatMessages()
+        if (roomId!=0)
+            getCurrentChatMessages()
     }
 
-    fun sendMessage(chat: Chat) {
+    fun sendMessage(newMessage: Chat) {
+        newMessage.roomId = roomId
         viewModelScope.launch (Dispatchers.IO){
-            sendChatMessage(chat).collectLatest {
-
+            sendChatMessage(newMessage).collectLatest {
+//                TODO
             }
         }
     }
 
     private fun getCurrentChatMessages() {
+        if (roomId==0){
+
+        }
         viewModelScope.launch {
-            getChatMessages(roomId!!).collectLatest {
+            getChatMessages(roomId).collectLatest {
                 when (it) {
                     is Resource.Loading -> _chatMessagesState.value =
                         chatMessagesState.value.copy(isLoading = true)
@@ -71,7 +78,28 @@ class ChatMessagesViewModel @Inject constructor(
     }
 
     @ExperimentalCoroutinesApi
-    fun registerChatChannel(roomId : Int, currentUserId:Int){
+    fun verifyUsersChat(userId:Int, chatUserId:Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            verifyChat(userId, chatUserId).collectLatest {
+                when(it){
+                    is Resource.Success->{
+                        roomId = it.data!!.id
+                        getCurrentChatMessages()
+                        registerChatChannel(userId)
+                    }
+                    is Resource.Error->{
+                        _chatMessagesState.value =
+                            ChatMessagesState(isLoading = false,error = it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun registerChatChannel(currentUserId:Int){
+        if (roomId==0)
+            return
         viewModelScope.launch (Dispatchers.IO){
             registerChatEvent(roomId,currentUserId).collectLatest {
                 Log.d(TAG, "registerChatChannel: ${it.data?.toString()}")
@@ -87,6 +115,7 @@ class ChatMessagesViewModel @Inject constructor(
     fun addMessageToChat(
         newMessage: Chat
     ) {
+        newMessage.roomId = roomId
         val tempList = mutableListOf<Chat>()
         tempList.addAll(_chatMessagesState.value.messages!!.value!!)
         tempList.add(newMessage)

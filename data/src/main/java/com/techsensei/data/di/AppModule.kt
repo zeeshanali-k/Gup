@@ -3,10 +3,16 @@ package com.techsensei.data.di
 import com.techsensei.data.BuildConfig
 import com.techsensei.data.network.AuthApiClient
 import com.techsensei.data.network.ChatClient
+import com.techsensei.data.network.NotificationsClient
+import com.techsensei.data.network.UsersClient
 import com.techsensei.data.repository.AuthRepositoryImpl
 import com.techsensei.data.repository.ChatRepositoryImpl
+import com.techsensei.data.repository.NotificationsRepositoryImpl
+import com.techsensei.data.repository.UserRepositoryImpl
 import com.techsensei.domain.repository.AuthRepository
 import com.techsensei.domain.repository.ChatRepository
+import com.techsensei.domain.repository.NotificationsRepository
+import com.techsensei.domain.repository.UsersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +56,18 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideNotificationsClient(retrofit: Retrofit): NotificationsClient {
+        return retrofit.create(NotificationsClient::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUsersClient(retrofit: Retrofit): UsersClient {
+        return retrofit.create(UsersClient::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun provideAuthRepository(authApiClient: AuthApiClient): AuthRepository =
         AuthRepositoryImpl(authApiClient)
 
@@ -57,5 +75,16 @@ object AppModule {
     @Provides
     fun provideChatRepository(chatClient: ChatClient): ChatRepository =
         ChatRepositoryImpl(chatClient)
+
+    @Singleton
+    @Provides
+    fun provideUsersRepository(usersClient: UsersClient): UsersRepository =
+        UserRepositoryImpl(usersClient)
+
+
+    @Singleton
+    @Provides
+    fun provideNotificationsRepository(notificationsClient: NotificationsClient): NotificationsRepository =
+        NotificationsRepositoryImpl(notificationsClient)
 
 }

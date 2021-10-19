@@ -51,8 +51,6 @@ class ChatRepositoryImpl(private val chatClient: ChatClient) : ChatRepository {
             } ?: Resource.Error("Failed to get data")
 //                ?: Resource.Error("Some Error Occurred. Try again!") // User does not exist
         } catch (e: Exception) {
-            Log.d(TAG, "getChatMessages: " + e.localizedMessage)
-            Log.d(TAG, "getChatMessages: " + e.cause)
             Resource.Error("Failed to get data")
         }
     }
@@ -98,11 +96,26 @@ class ChatRepositoryImpl(private val chatClient: ChatClient) : ChatRepository {
                 TAG, "Received Data: "
                         + Gson().fromJson(event.data, ChatEvent::class.java).toString()
             )
-            val isSuccess=trySend(Resource.Success(Gson().fromJson(event.data, ChatEvent::class.java).chat.toChat()))
+            val isSuccess = trySend(
+                Resource.Success(
+                    Gson().fromJson(
+                        event.data,
+                        ChatEvent::class.java
+                    ).chat.toChat()
+                )
+            )
                 .isSuccess
             Log.d(TAG, "registerChatEvent: $isSuccess")
         }
         awaitClose { pusher.disconnect() }
+    }
+
+    override suspend fun verifyChat(userId: Int, chatUserId: Int): Resource<Room> {
+        return try {
+            Resource.Success(chatClient.verifyChat(userId, chatUserId).toRoom())
+        } catch (e: Exception) {
+            Resource.Error("Failed to connect.")
+        }
     }
 
 //    override suspend fun registerForChatEvent(channelPostFix : String): Flow<Resource<Chat>> {

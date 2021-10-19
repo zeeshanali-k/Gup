@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import com.techsensei.gupp.authentication.login_register.LoginRegisterScreen
 import com.techsensei.gupp.main.chat.chat.ChatMessagesScreen
 import com.techsensei.gupp.main.home.HomeScreen
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalCoroutinesApi
 @ExperimentalAnimationApi
 @Composable

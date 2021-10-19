@@ -2,12 +2,13 @@ package com.techsensei.data.di
 
 import com.techsensei.domain.repository.AuthRepository
 import com.techsensei.domain.repository.ChatRepository
+import com.techsensei.domain.repository.NotificationsRepository
+import com.techsensei.domain.repository.UsersRepository
 import com.techsensei.domain.use_case.auth.RegisterUserUseCase
 import com.techsensei.domain.use_case.auth.VerifyUserUseCase
-import com.techsensei.domain.use_case.chat.GetAllChats
-import com.techsensei.domain.use_case.chat.GetChatMessages
-import com.techsensei.domain.use_case.chat.RegisterChatEvent
-import com.techsensei.domain.use_case.chat.SendMessage
+import com.techsensei.domain.use_case.chat.*
+import com.techsensei.domain.use_case.notifications.GetNotifications
+import com.techsensei.domain.use_case.users.GetUsers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,8 +51,26 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetUsers(usersRepository: UsersRepository): GetUsers {
+        return GetUsers(usersRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideVerifyChat(chatRepository: ChatRepository): VerifyChat {
+        return VerifyChat(chatRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun provideRegisterChatEvent(chatRepository: ChatRepository): RegisterChatEvent {
         return RegisterChatEvent(chatRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetNotifications(notificationsRepository: NotificationsRepository): GetNotifications {
+        return GetNotifications(notificationsRepository)
     }
 
 }

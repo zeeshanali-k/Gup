@@ -32,7 +32,7 @@ val Typography = Typography(
         fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        color = DarkTextColor
+        color = TextColor
     ),
     h5 = TextStyle(
         fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),

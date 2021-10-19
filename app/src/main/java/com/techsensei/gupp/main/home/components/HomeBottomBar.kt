@@ -1,8 +1,6 @@
 package com.techsensei.gupp.main.home.components
 
-import android.os.Bundle
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +13,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import com.techsensei.gupp.R
 import com.techsensei.gupp.main.home.TabSelection
 import com.techsensei.gupp.ui.theme.Primary
@@ -28,20 +25,13 @@ private const val TAG = "HomeBottomBar"
 
 @Composable
 fun HomeBottomBar(tabsSelection: MutableState<TabSelection>,navController: NavController) {
-    navController.addOnDestinationChangedListener(object : NavController.OnDestinationChangedListener {
-        override fun onDestinationChanged(
-            controller: NavController,
-            destination: NavDestination,
-            arguments: Bundle?
-        ) {
-            destination.route?.let {
-                if (it == Tabs.ChatsTab.route){
-                    tabsSelection.value = TabSelection(isChatsTab = true)
-                }
+    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        destination.route?.let {
+            if (it == Tabs.ChatsTab.route) {
+                tabsSelection.value = TabSelection(isChatsTab = true)
             }
         }
-
-    })
+    }
     BottomNavigation(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = Primary
@@ -51,8 +41,9 @@ fun HomeBottomBar(tabsSelection: MutableState<TabSelection>,navController: NavCo
             selected = tabsSelection.value.isChatsTab, rowScope = this, title = Tabs.ChatsTab.title,
             painter = painterResource(id = R.drawable.ic_round_chat_24)
         ) {
+            if (tabsSelection.value.isChatsTab) return@BottomTab
             tabsSelection.value = TabSelection(isChatsTab = true)
-            navController.navigator(Tabs.ChatsTab.route,popUpTo = Tabs.ChatsTab.route,false)
+            navController.navigateUp()
         }
 
         BottomTab(
@@ -61,6 +52,7 @@ fun HomeBottomBar(tabsSelection: MutableState<TabSelection>,navController: NavCo
             painter = painterResource(id = R.drawable.ic_baseline_supervised_user_circle_24),
             rowScope = this
         ) {
+            if (tabsSelection.value.isUsersTab) return@BottomTab
             tabsSelection.value = TabSelection(isUsersTab = true)
             navController.navigator(Tabs.UsersListTab.route,popUpTo = Tabs.ChatsTab.route,false)
         }
@@ -70,6 +62,7 @@ fun HomeBottomBar(tabsSelection: MutableState<TabSelection>,navController: NavCo
             painter = painterResource(id = R.drawable.ic_baseline_circle_notifications_24),
             selected = tabsSelection.value.isNotificationsTab, rowScope = this
         ) {
+            if (tabsSelection.value.isNotificationsTab) return@BottomTab
             tabsSelection.value = TabSelection(isNotificationsTab = true)
             navController.navigator(Tabs.NotificationsTab.route,popUpTo = Tabs.ChatsTab.route,false)
         }
@@ -79,6 +72,7 @@ fun HomeBottomBar(tabsSelection: MutableState<TabSelection>,navController: NavCo
             painter = painterResource(id = R.drawable.ic_baseline_person_pin_24),
             selected = tabsSelection.value.isProfileTab, rowScope = this
         ) {
+            if (tabsSelection.value.isProfileTab) return@BottomTab
             tabsSelection.value = TabSelection(isProfileTab = true)
             navController.navigator(Tabs.ProfileTab.route,popUpTo = Tabs.ChatsTab.route,false)
         }

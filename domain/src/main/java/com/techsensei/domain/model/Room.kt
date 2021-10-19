@@ -7,12 +7,12 @@ import android.os.Parcelable
 data class Room(
     val id: Int,
     val user: User,
-    val lastMessage: Chat
+    val lastMessage: Chat? = null
 ):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readParcelable(User::class.java.classLoader)!!,
-        parcel.readParcelable(Chat::class.java.classLoader)!!
+        parcel.readParcelable(Chat::class.java.classLoader)
     ) {
     }
 

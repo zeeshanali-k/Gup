@@ -4,11 +4,11 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class User(
-    var name: String? = "",
-    var email: String? = "",
-    var password: String? = "",
+    var name: String? = null,
+    var email: String? = null,
+    var password: String? = null,
     var id: Int? = null,
-    var profileImage: String? = "",
+    var profileImage: String? = null,
     var profileImageTest: Int = -1,
     val exists: Boolean = false
 ):Parcelable {

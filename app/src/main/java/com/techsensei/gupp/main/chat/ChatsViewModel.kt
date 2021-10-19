@@ -1,18 +1,14 @@
 package com.techsensei.gupp.main.chat
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.techsensei.domain.model.Resource
 import com.techsensei.domain.use_case.chat.GetAllChats
-import com.techsensei.gupp.utils.constants.ArgConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +27,7 @@ class ChatsViewModel @Inject constructor(
 //        val userId = savedStateHandle.get<Int>(ArgConstants.USER_ID)!!
 //        Log.d(TAG, "user id: $userId")
 //        _chatsState.value = ChatsState(isLoading = true)
-        if (chatsState.value?.chats!=null) return
+//        if (chatsState.value?.chats!=null) return
         viewModelScope.launch(Dispatchers.IO) {
             getAllChats(userId).collectLatest {
                 when (it) {

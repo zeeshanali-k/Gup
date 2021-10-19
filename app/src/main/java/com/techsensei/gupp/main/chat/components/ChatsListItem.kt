@@ -81,11 +81,11 @@ fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room, currentUserId: Int
                     Log.d(TAG, "ChatsListItem: $currentUserId")
                     Text(
                         text =
-                        (if (room.lastMessage.user.id == currentUserId)
+                        (if (room.lastMessage!!.user.id == currentUserId)
                             "You: "
                         else
                             "${room.user.name}: ") +
-                        room.lastMessage.message,
+                        room.lastMessage!!.message,
 
                         style = Typography.caption,
                         modifier = Modifier
@@ -95,7 +95,7 @@ fun ChatsListItem(onItemClick: (id: Int) -> Unit, room: Room, currentUserId: Int
                         maxLines = 1
                     )
                     Text(
-                        text = AppConstants.getTimeFromDate(room.lastMessage.messageTime!!),
+                        text = AppConstants.getTimeFromDate(room.lastMessage!!.messageTime!!),
                         style = Typography.caption,
                         textAlign = TextAlign.End,
                         modifier = Modifier

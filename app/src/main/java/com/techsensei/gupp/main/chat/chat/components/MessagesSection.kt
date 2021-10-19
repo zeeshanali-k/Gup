@@ -34,7 +34,8 @@ fun MessagesSection(
                 }
             }
             coroutineScope.launch {
-                lazyColumnState.scrollToItem(chatList.size - 1)
+                if (chatList.isNotEmpty())
+                    lazyColumnState.scrollToItem(chatList.size - 1)
             }
         }
     }
