@@ -1,21 +1,14 @@
 package com.techsensei.data.di
 
+import android.content.Context
 import com.techsensei.data.BuildConfig
-import com.techsensei.data.network.AuthApiClient
-import com.techsensei.data.network.ChatClient
-import com.techsensei.data.network.NotificationsClient
-import com.techsensei.data.network.UsersClient
-import com.techsensei.data.repository.AuthRepositoryImpl
-import com.techsensei.data.repository.ChatRepositoryImpl
-import com.techsensei.data.repository.NotificationsRepositoryImpl
-import com.techsensei.data.repository.UserRepositoryImpl
-import com.techsensei.domain.repository.AuthRepository
-import com.techsensei.domain.repository.ChatRepository
-import com.techsensei.domain.repository.NotificationsRepository
-import com.techsensei.domain.repository.UsersRepository
+import com.techsensei.data.network.*
+import com.techsensei.data.repository.*
+import com.techsensei.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -42,6 +35,7 @@ object AppModule {
             .build()
     }
 
+    //    Client
     @Singleton
     @Provides
     fun provideAuthApiClient(retrofit: Retrofit): AuthApiClient {
@@ -68,6 +62,16 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideProfileClient(retrofit: Retrofit): ProfileClient {
+        return retrofit.create(ProfileClient::class.java)
+    }
+
+//    Clients end
+
+//    Repos
+
+    @Singleton
+    @Provides
     fun provideAuthRepository(authApiClient: AuthApiClient): AuthRepository =
         AuthRepositoryImpl(authApiClient)
 
@@ -80,6 +84,14 @@ object AppModule {
     @Provides
     fun provideUsersRepository(usersClient: UsersClient): UsersRepository =
         UserRepositoryImpl(usersClient)
+
+    @Singleton
+    @Provides
+    fun provideProfileRepository(
+        profileClient: ProfileClient,
+        @ApplicationContext context: Context
+    ): ProfileRepository =
+        ProfileRepositoryImpl(profileClient, context)
 
 
     @Singleton

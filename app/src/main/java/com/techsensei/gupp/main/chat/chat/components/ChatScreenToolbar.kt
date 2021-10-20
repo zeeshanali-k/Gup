@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,8 +49,8 @@ fun ChatScreenToolbar(user: User,onBackClicked:()->Unit) {
             modifier = Modifier
                 .size(35.dp)
                 .clip(RoundedCornerShape(50))
-                .background(PrimaryDark)
-                .padding(5.dp)
+                .background(PrimaryDark),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.width(10.dp))

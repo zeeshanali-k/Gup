@@ -28,6 +28,12 @@ val Typography = Typography(
         fontSize = 16.sp,
         color = DarkTextColor
     ),
+    h3 = TextStyle(
+        fontFamily = FontFamily(listOf(Font(R.font.josefinsans_bold))),
+        fontWeight = FontWeight.Bold,
+        fontSize = 15.sp,
+        color = TextColor
+    ),
     h4 = TextStyle(
         fontFamily = FontFamily(listOf(Font(R.font.josefinsans_medium))),
         fontWeight = FontWeight.Normal,

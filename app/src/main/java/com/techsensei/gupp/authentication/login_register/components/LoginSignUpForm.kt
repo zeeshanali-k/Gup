@@ -48,7 +48,7 @@ fun LoginSignUpForm(
 
 
     LoginTextField(
-        user.email!!,
+        user.email?:"",
         onEmailChanged,
         KeyboardType.Email,
         stringResource(id = R.string.email),
@@ -67,7 +67,7 @@ fun LoginSignUpForm(
             )
 
             LoginTextField(
-                value = user.name!!,
+                value = user.name?:"",
                 onTextChanged = onNameChanged,
                 keyboardType = KeyboardType.Text,
                 label = stringResource(id = R.string.full_name),
@@ -200,7 +200,7 @@ fun PasswordTextField(user: User, onPasswordChanged: (String) -> Unit, passwordE
     }
 
     OutlinedTextField(
-        value = user.password!!,
+        value = user.password?:"",
         onValueChange = onPasswordChanged,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,

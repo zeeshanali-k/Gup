@@ -11,4 +11,5 @@
     <string name="app_slogan">Lets gup!</string>
     <string name="enter_message">Enter Message</string>
     <string name="dismiss">Dismiss</string>
+    <string name="logout">Logout</string>
 </resources>

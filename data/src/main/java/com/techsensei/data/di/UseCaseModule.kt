@@ -1,13 +1,11 @@
 package com.techsensei.data.di
 
-import com.techsensei.domain.repository.AuthRepository
-import com.techsensei.domain.repository.ChatRepository
-import com.techsensei.domain.repository.NotificationsRepository
-import com.techsensei.domain.repository.UsersRepository
+import com.techsensei.domain.repository.*
 import com.techsensei.domain.use_case.auth.RegisterUserUseCase
 import com.techsensei.domain.use_case.auth.VerifyUserUseCase
 import com.techsensei.domain.use_case.chat.*
 import com.techsensei.domain.use_case.notifications.GetNotifications
+import com.techsensei.domain.use_case.profile.UpdateProfileImage
 import com.techsensei.domain.use_case.users.GetUsers
 import dagger.Module
 import dagger.Provides
@@ -71,6 +69,12 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideGetNotifications(notificationsRepository: NotificationsRepository): GetNotifications {
         return GetNotifications(notificationsRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateProfileImage(profileRepository: ProfileRepository): UpdateProfileImage {
+        return UpdateProfileImage(profileRepository)
     }
 
 }

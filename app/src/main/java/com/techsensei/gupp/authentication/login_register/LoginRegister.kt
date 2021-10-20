@@ -70,6 +70,7 @@ fun checkLogin(
             prefsProvider.setString(PrefConstants.USER_NAME, it.name!!)
             prefsProvider.setInt(PrefConstants.USER_ID, it.id!!)
             prefsProvider.setString(PrefConstants.USER_EMAIL, it.email!!)
+            prefsProvider.setString(PrefConstants.USER_PROFILE_IMAGE, it.profileImage!!)
 //            Navigate to Home screen
             navController.navigator(
                 Screen.HomeScreen.route,

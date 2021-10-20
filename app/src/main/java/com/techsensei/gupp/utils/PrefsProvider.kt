@@ -32,4 +32,8 @@ class PrefsProvider(val context: Context) {
             .apply()
     }
 
+    fun clear(){
+        sharedPreferences.edit().clear().apply()
+    }
+
 }
