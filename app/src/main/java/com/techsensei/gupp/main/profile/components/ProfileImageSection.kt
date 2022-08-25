@@ -26,9 +26,9 @@ import com.techsensei.gupp.utils.constants.PrefConstants
 
 @Composable
 fun ProfileImageSection(
-    profileImage : State<String?>,
+    profileImage : String?,
     modifier: Modifier = Modifier,
-    imgPickerLauncher: ManagedActivityResultLauncher<String, Uri>,
+    imgPickerLauncher: ManagedActivityResultLauncher<String, Uri?>,
     profileState: State<ProfileState>
 ) {
 
@@ -40,7 +40,7 @@ fun ProfileImageSection(
         }
         Image(
             painter = rememberImagePainter(
-                data = profileImage.value ?: R.drawable.man_avatar
+                data = profileImage ?: R.drawable.man_avatar
             ),
             contentDescription = "Profile Image",
             modifier = Modifier

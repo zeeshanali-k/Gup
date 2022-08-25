@@ -33,7 +33,6 @@ import com.techsensei.gupp.ui.theme.*
 import com.techsensei.gupp.utils.helpers.InputError
 
 
-@ExperimentalAnimationApi
 @Composable
 fun LoginSignUpForm(
     authState: AuthState,
@@ -137,7 +136,6 @@ fun LoginSignUpForm(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun LoginTextField(
     value: String, onTextChanged: (String) -> Unit,
@@ -187,7 +185,6 @@ fun LoginTextField(
 
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun PasswordTextField(user: User, onPasswordChanged: (String) -> Unit, passwordError: String?) {
     var isPasswordVisible by remember {

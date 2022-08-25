@@ -14,7 +14,6 @@ interface ChatRepository {
     suspend fun getChatMessages(roomId:Int):Resource<List<Chat>>
     suspend fun sendMessage(chat: Chat): Resource<ChatResponse>
 //    suspend fun registerForChatEvent(channelPostFix:String): Resource<Chat>
-    @ExperimentalCoroutinesApi
     fun registerChatEvent(roomId: Int):Flow<Resource<Chat>>
 
     suspend fun verifyChat(userId:Int,chatUserId:Int):Resource<Room>

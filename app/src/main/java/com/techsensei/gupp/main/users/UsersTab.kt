@@ -78,14 +78,11 @@ fun UsersTab(
             else -> {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(userState.value.users!!) {
-                        UserItem(user = it) {
-                            navController.currentBackStackEntry?.arguments =
-                                Bundle().apply {
-                                    putParcelable(
-                                        ArgConstants.ROOM_ARG,
-                                        Room(0, it, null)
-                                    )
-                                }
+                        UserItem(user = it) { u ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                ArgConstants.ROOM_ARG,
+                                Room(0, u, null)
+                            )
                             navController.navigate(Screen.ChatScreen.getRouteWithArgument(0)) {
                                 this.anim {
                                     this.enter = R.anim.onesignal_fade_in

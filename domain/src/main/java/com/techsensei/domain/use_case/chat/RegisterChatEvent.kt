@@ -12,11 +12,10 @@ import kotlinx.coroutines.flow.flow
 
 class RegisterChatEvent(private val chatRepository: ChatRepository) {
 
-    @ExperimentalCoroutinesApi
     operator fun invoke(roomId: Int, userId: Int): Flow<Resource<Chat>> = callbackFlow {
         trySend(Resource.Loading())
         chatRepository.registerChatEvent(roomId).collectLatest {
-            if (it is Resource.Success && it.data!!.user!!.id == userId) {
+            if (it is Resource.Success && it.data!!.user.id == userId) {
                 return@collectLatest
             }
             trySend(it)

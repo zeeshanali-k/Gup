@@ -77,7 +77,6 @@ class ChatMessagesViewModel @Inject constructor(
         }
     }
 
-    @ExperimentalCoroutinesApi
     fun verifyUsersChat(userId:Int, chatUserId:Int){
         viewModelScope.launch(Dispatchers.IO) {
             verifyChat(userId, chatUserId).collectLatest {
@@ -91,12 +90,12 @@ class ChatMessagesViewModel @Inject constructor(
                         _chatMessagesState.value =
                             ChatMessagesState(isLoading = false,error = it.message)
                     }
+                    else -> {}
                 }
             }
         }
     }
 
-    @ExperimentalCoroutinesApi
     fun registerChatChannel(currentUserId:Int){
         if (roomId==0)
             return
@@ -106,6 +105,7 @@ class ChatMessagesViewModel @Inject constructor(
                 when(it){
                     is Resource.Success->
                        addMessageToChat(it.data!!)
+                    else -> {}
                 }
             }
         }

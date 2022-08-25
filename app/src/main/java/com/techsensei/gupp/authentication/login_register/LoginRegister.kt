@@ -1,7 +1,7 @@
 package com.techsensei.gupp.authentication.login_register
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,30 +21,44 @@ import com.techsensei.gupp.R
 import com.techsensei.gupp.authentication.login_register.components.LoginRegisterTopBar
 import com.techsensei.gupp.authentication.login_register.components.LoginSignUpForm
 import com.techsensei.gupp.ui.theme.*
-import com.techsensei.gupp.utils.PrefsProvider
 import com.techsensei.gupp.utils.Screen
-import com.techsensei.gupp.utils.constants.PrefConstants
 import com.techsensei.gupp.utils.helpers.InputError
 import com.techsensei.gupp.utils.navigator
 
-@ExperimentalAnimationApi
 @Composable
 fun LoginRegisterScreen(
     navController: NavController,
     loginRegisterViewModel: LoginRegisterViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(key1 = loginRegisterViewModel.resource.value) {
-        loginRegisterViewModel.resource.value.error?.let {
+    LaunchedEffect(key1 = loginRegisterViewModel.authState.value) {
+        if (loginRegisterViewModel.isLoggedIn) {
+            navController.navigator(
+                Screen.HomeScreen.route,
+                Screen.LoginRegisterScreen.route,
+                true
+            )
+            return@LaunchedEffect
+        }
+        val authState = loginRegisterViewModel.authState.value
+        authState.error?.let {
             scaffoldState.snackbarHostState.showSnackbar(
                 it, "Dismiss",
                 SnackbarDuration.Short
             )
         }
+        authState.user?.let {
+            if ((authState.isRegistered || it.exists) && authState.isLoading.not()) {
+                Log.d(TAG, "LoginRegisterScreen: ")
+                navController.navigator(
+                    Screen.HomeScreen.route,
+                    Screen.LoginRegisterScreen.route,
+                    true
+                )
+            }
+        }
     }
     val context = LocalContext.current
-    checkLogin(loginRegisterViewModel, navController, context)
 
     Scaffold(modifier = Modifier
         .fillMaxSize(),
@@ -60,18 +74,16 @@ fun LoginRegisterScreen(
 fun checkLogin(
     loginRegisterViewModel: LoginRegisterViewModel,
     navController: NavController,
-    context: Context
+    isLoggedIn: MutableState<Boolean>
 ): Boolean {
-    val authState = loginRegisterViewModel.resource.value
+    Log.d(TAG, "checkLogin: ${isLoggedIn.value}")
+    if (isLoggedIn.value)
+        return true
+    val authState = loginRegisterViewModel.authState.value
     authState.user?.let {
-        if (authState.isRegistered || it.exists) {
-            val prefsProvider = PrefsProvider(context)
-            prefsProvider.setBool(PrefConstants.IS_LOGGED_IN, true)
-            prefsProvider.setString(PrefConstants.USER_NAME, it.name!!)
-            prefsProvider.setInt(PrefConstants.USER_ID, it.id!!)
-            prefsProvider.setString(PrefConstants.USER_EMAIL, it.email!!)
-            prefsProvider.setString(PrefConstants.USER_PROFILE_IMAGE, it.profileImage!!)
+        if ((authState.isRegistered || it.exists) && authState.isLoading.not()) {
 //            Navigate to Home screen
+            isLoggedIn.value = true
             navController.navigator(
                 Screen.HomeScreen.route,
                 Screen.LoginRegisterScreen.route,
@@ -84,14 +96,13 @@ fun checkLogin(
     return false
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun LoginRegBody(
     paddingValues: PaddingValues,
     loginRegisterViewModel: LoginRegisterViewModel,
     context: Context
 ) {
-    val authState = loginRegisterViewModel.resource
+    val authState = loginRegisterViewModel.authState
     val isNewUser = authState.value.user?.let { !it.exists } ?: false
     val user = remember {
         mutableStateOf(User())

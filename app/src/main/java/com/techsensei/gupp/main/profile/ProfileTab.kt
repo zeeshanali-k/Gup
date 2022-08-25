@@ -3,30 +3,25 @@ package com.techsensei.gupp.main.profile
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import com.techsensei.gupp.R
 import com.techsensei.gupp.main.profile.components.ProfileImageSection
-import com.techsensei.gupp.ui.theme.*
+import com.techsensei.gupp.ui.theme.AppBg
+import com.techsensei.gupp.ui.theme.Typography
 import com.techsensei.gupp.utils.PrefsProvider
 import com.techsensei.gupp.utils.Screen
 import com.techsensei.gupp.utils.constants.PrefConstants
@@ -38,19 +33,11 @@ fun ProfileTab(
     navController: NavController,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    Log.d(TAG, "ProfileTab: init ")
     val profileState = profileViewModel.profileState
 
-    val prefsProvider by remember {
-        mutableStateOf(PrefsProvider(context))
-    }
-
-    val profileImage = remember {
-        mutableStateOf(prefsProvider.getString(PrefConstants.USER_PROFILE_IMAGE))
-    }
-
     profileState.value.profileImageUrl?.let {
-        profileImage.value = it
+        profileViewModel.profileImg = it
     }
 
     val imgPickerLauncher =
@@ -58,7 +45,7 @@ fun ProfileTab(
 
             it?.let { uri ->
                 profileViewModel.updateProfileImage(
-                    uri.toString(), prefsProvider.getInt(PrefConstants.USER_ID)
+                    uri.toString()
                 )
             }
         }
@@ -82,7 +69,7 @@ fun ProfileTab(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileImageSection(
-            profileImage = profileImage,
+            profileImage = profileViewModel.profileImg,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
@@ -95,7 +82,7 @@ fun ProfileTab(
                 .height(20.dp)
         )
         Text(
-            text = prefsProvider.getString(PrefConstants.USER_NAME)!!,
+            text = profileViewModel.userName,
             style = Typography.h2
         )
         Spacer(
@@ -104,7 +91,7 @@ fun ProfileTab(
                 .height(20.dp)
         )
         Text(
-            text = prefsProvider.getString(PrefConstants.USER_EMAIL)!!,
+            text = profileViewModel.userEmail,
             style = Typography.h4
         )
         Box(
@@ -114,7 +101,7 @@ fun ProfileTab(
             contentAlignment = Alignment.BottomCenter
         ) {
             OutlinedButton(onClick = {
-                prefsProvider.clear()
+                profileViewModel.logout()
                 navController.navigator(
                     Screen.SplashScreen.route,
                     Screen.HomeScreen.route,

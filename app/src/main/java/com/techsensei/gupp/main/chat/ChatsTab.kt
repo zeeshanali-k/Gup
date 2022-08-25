@@ -113,10 +113,7 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                         ) {
                             items(chatsStateVal.chats ?: listOf()) { room ->
                                 ChatsListItem(onItemClick = {
-                                    navController.currentBackStackEntry?.arguments =
-                                        Bundle().apply {
-                                            putParcelable(ArgConstants.ROOM_ARG, room)
-                                        }
+                                    navController.currentBackStackEntry?.savedStateHandle?.set(ArgConstants.ROOM_ARG, room)
                                     navController.navigate(Screen.ChatScreen.getRouteWithArgument(it)) {
                                         this.anim {
                                             this.enter = R.anim.onesignal_fade_in

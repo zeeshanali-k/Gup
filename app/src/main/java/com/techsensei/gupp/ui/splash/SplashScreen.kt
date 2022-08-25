@@ -1,5 +1,6 @@
 package com.techsensei.gupp.ui.splash
 
+import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,34 +25,41 @@ import com.techsensei.gupp.utils.constants.PrefConstants
 import com.techsensei.gupp.utils.navigator
 import kotlinx.coroutines.delay
 
+private const val TAG = "SplashScreen"
+
 @Composable
 fun SplashScreen(navController: NavHostController) {
-
+    Log.d(TAG, "SplashScreen: ")
     var size by remember {
         mutableStateOf(50.dp)
     }
 
     val context = LocalContext.current
+//    val prefsProvider by remember {
+//        mutableStateOf(PrefsProvider(context))
+//    }
     LaunchedEffect(key1 = true) {
 //        delay(200)
         size = 150.dp
         delay(200)
         size = 100.dp
         delay(1000)
-        val prefsProvider = PrefsProvider(context)
-        if (prefsProvider.getBool(PrefConstants.IS_LOGGED_IN)) {
-            navController.navigator(
-                Screen.HomeScreen.route, Screen.SplashScreen.route,
-                true
-            )
-        } else {
+//        Log.d(TAG, "In SplashScreen: isLoggedIn: ${prefsProvider.getBool(PrefConstants.IS_LOGGED_IN)}")
+//        if (prefsProvider.getBool(PrefConstants.IS_LOGGED_IN)) {
+//            navController.navigator(
+//                Screen.HomeScreen.route, Screen.SplashScreen.route,
+//                true
+//            )
+//        } else {
             navController.navigator(
                 Screen.LoginRegisterScreen.route, Screen.SplashScreen.route,
                 true
             )
-        }
+//        }
     }
 
+    Log.d(TAG, "SplashScreen:Out ")
+//    Log.d(TAG, "Out SplashScreen: isLoggedIn: ${prefsProvider.getBool(PrefConstants.IS_LOGGED_IN)}")
     val logoSize = animateDpAsState(targetValue = size)
     Box(
         contentAlignment = Alignment.Center,

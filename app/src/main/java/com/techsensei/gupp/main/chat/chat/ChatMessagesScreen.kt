@@ -1,12 +1,7 @@
 package com.techsensei.gupp.main.chat.chat
 
-import android.os.Parcel
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,20 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.techsensei.data.network.dto.toUser
 import com.techsensei.domain.model.Chat
 import com.techsensei.domain.model.Room
-import com.techsensei.domain.model.User
-import com.techsensei.gupp.R
-import com.techsensei.gupp.main.chat.ChatsState
 import com.techsensei.gupp.main.chat.chat.components.ChatScreenToolbar
-import com.techsensei.gupp.main.chat.chat.components.MessagesSection
 import com.techsensei.gupp.main.chat.chat.components.MessageInput
+import com.techsensei.gupp.main.chat.chat.components.MessagesSection
 import com.techsensei.gupp.ui.theme.AppBg
 import com.techsensei.gupp.ui.theme.Typography
 import com.techsensei.gupp.utils.PrefsProvider
@@ -43,12 +33,10 @@ import com.techsensei.gupp.utils.constants.AppConstants
 import com.techsensei.gupp.utils.constants.ArgConstants
 import com.techsensei.gupp.utils.constants.PrefConstants
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatMessagesScreen"
 
-@ExperimentalCoroutinesApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
@@ -70,8 +58,11 @@ fun ChatMessagesScreen(
     val lazyColumnState = rememberLazyListState()
     val chatMessagesState = chatMessagesViewModel.chatMessagesState
 
-    val room =
-        navController.previousBackStackEntry?.arguments!!.getParcelable<Room>(ArgConstants.ROOM_ARG)!!
+    val room = try {
+        navController.previousBackStackEntry?.savedStateHandle!!.get<Room>(ArgConstants.ROOM_ARG)!!
+    }catch (e:NullPointerException){
+        return
+    }
 //    Getting messages
     LaunchedEffect(key1 = true) {
         if (room.id == 0)
@@ -135,12 +126,13 @@ fun ChatMessagesBottomBar(
 ) {
 
     AnimatedVisibility(
-        !chatMessagesState.value.isLoading, enter = slideIn({
-            IntOffset(0, it.height)
-        }),
-        exit = slideOut({
-            IntOffset(0, it.height)
-        })
+        !chatMessagesState.value.isLoading,
+//        TODO enter = slideIn({
+//            IntOffset(0, it.height)
+//        }),
+//        exit = slideOut({
+//            IntOffset(0, it.height)
+//        })
     ) {
         MessageInput(modifier = Modifier
             .fillMaxWidth()

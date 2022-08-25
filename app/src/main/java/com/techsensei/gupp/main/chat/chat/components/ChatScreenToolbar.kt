@@ -59,6 +59,7 @@ fun ChatScreenToolbar(user: User,onBackClicked:()->Unit) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Preview
 @Composable
 fun ShowChatScreenToolbar(){

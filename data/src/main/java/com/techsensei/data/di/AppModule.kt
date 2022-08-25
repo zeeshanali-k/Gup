@@ -4,6 +4,7 @@ import android.content.Context
 import com.techsensei.data.BuildConfig
 import com.techsensei.data.network.*
 import com.techsensei.data.repository.*
+import com.techsensei.data.utils.PrefsProvider
 import com.techsensei.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -46,6 +47,12 @@ object AppModule {
     @Provides
     fun provideChatClient(retrofit: Retrofit): ChatClient {
         return retrofit.create(ChatClient::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePrefsProvider(@ApplicationContext context: Context): PrefsProvider {
+        return PrefsProvider(context)
     }
 
     @Singleton

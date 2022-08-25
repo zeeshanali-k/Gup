@@ -35,6 +35,7 @@ class NotificationsViewModel @Inject constructor(
                             _notificationsState.value = NotificationsState(isLoading = false,error = it.message)
                         }
 
+                        else -> {}
                     }
                 }
             }

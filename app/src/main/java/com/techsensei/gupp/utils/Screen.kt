@@ -1,7 +1,7 @@
 package com.techsensei.gupp.utils
 
 import androidx.navigation.NavType
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 import com.techsensei.gupp.utils.constants.ArgConstants
 
 sealed class Screen(val title: String, val route: String) {

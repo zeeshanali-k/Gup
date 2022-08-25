@@ -66,15 +66,20 @@ class ChatRepositoryImpl(private val chatClient: ChatClient) : ChatRepository {
         }
     }
 
-    @ExperimentalCoroutinesApi
     override fun registerChatEvent(roomId: Int): Flow<Resource<Chat>> = callbackFlow {
         val options = PusherOptions()
-        options.setCluster("ap2")
+        options.setCluster("mt1")
+        options.setHost("192.168.8.102")
+        options.setWsPort(6001).isUseTLS = false
+        options.setWssPort(6001).activityTimeout = 5000
 
-        val pusher = Pusher("81067ddc08c9872c59aa", options)
+        val pusher = Pusher("abc", options)
         pusher.connect(object : ConnectionEventListener {
             override fun onConnectionStateChange(change: ConnectionStateChange) {
-                Log.d(TAG, "State changed from ${change.previousState} to ${change.currentState}")
+                Log.d(
+                    TAG,
+                    "State changed from ${change.previousState} to ${change.currentState}"
+                )
             }
 
             override fun onError(

@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @ExperimentalCoilApi
-@ExperimentalCoroutinesApi
 @ExperimentalAnimationApi
 @Composable
 fun AppFlow(navController: NavHostController) {
