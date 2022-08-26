@@ -4,6 +4,7 @@ A real time Jetpack Compose native android Chat app based on clean architecture,
 <img src="/screenshots/s_06.png" width="250" height="420"> <img src="/screenshots/s_01.png" width="250" height="420">
 <img src="/screenshots/s_02.png" width="250" height="420"> <img src="/screenshots/s_03.png" width="250" height="420">
 <img src="/screenshots/s_04.png" width="250" height="420"> <img src="/screenshots/s_05.png" width="250" height="420">
+<img src="/screenshots/s_07.png" width="250" height="420">
 
 Technologies:
 - Android
