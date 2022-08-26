@@ -1,8 +1,7 @@
 name: Upload APK in Releases
 on:
   push:
-    branches:
-      - 'main_app_flow'
+    branches: [ "master" ]
 
 jobs:
   apk:
@@ -34,8 +33,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_RELEASE }}
         with:
-          tag_name: newtag
-          release_name: Automatic Release
+          tag_name: test
+          release_name: Gup
           draft: false
           prerelease: false
 
