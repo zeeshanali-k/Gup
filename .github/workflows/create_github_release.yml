@@ -1,7 +1,7 @@
 name: Upload APK in Releases
 on:
   push:
-    branches: [ "main_app_flow" ]
+    branches: [ "main" ]
 
 jobs:
   apk:
