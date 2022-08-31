@@ -38,7 +38,9 @@ jobs:
           release_name: Gup
           draft: false
           prerelease: false
-
+          
+      - name: test
+        run: echo ${{ secrets.GH_TOKEN_RELEASE }}
       - name: Upload APK to Release
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
