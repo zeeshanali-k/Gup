@@ -35,7 +35,7 @@ jobs:
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_RELEASE }}
 #         with:
-#           tag_name: test_${{ github.ref.after }}
+#           tag_name: test_${{ github.run_id }}
 #           release_name: Gup
 #           draft: false
 #           prerelease: false
