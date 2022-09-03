@@ -19,7 +19,7 @@ jobs:
       - name: Grant Permission to Execute
         run: chmod +x gradlew
       - name: Test
-        run : echo ${{ github.run_id }}
+        run : echo test_${{ github.run_id }}
 #       - name: Build debug APK
 #         run: bash ./gradlew assembleDebug --stacktrace
         
