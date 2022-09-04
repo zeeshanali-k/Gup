@@ -18,8 +18,9 @@ jobs:
 
       - name: Grant Permission to Execute
         run: chmod +x gradlew
-      - name: Test
-        run : echo test_${{ github.run_id }}
+        
+      - name: Grant Permission to Execute
+        run: echo ${{ secrets.GH_TOKEN_RELEASE }}
       - name: Build debug APK
         run: bash ./gradlew assembleDebug --stacktrace
         
@@ -35,13 +36,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_RELEASE }}
         with:
-          tag_name: test_${{ github.run_id }}
+          tag_name: gupp_${{ github.run_id }}
           release_name: Gup
           draft: false
           prerelease: false
           
       - name: Upload APK to Release
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_RELEASE }}
