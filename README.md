@@ -7,6 +7,9 @@ A real time Jetpack Compose native android Chat app based on clean architecture,
 <img src="/screenshots/s_04.png" width="250" height="420"> <img src="/screenshots/s_05.png" width="250" height="420">
 <img src="/screenshots/s_07.png" width="250" height="420">
 
+How to make it work:
+Follow the steps provided on backend to run backend after that Replace all TODOs in this android project (You can access each comment with TODO using TODO tab in bottom of android studio) with your own values like server url etc.
+
 Technologies:
 - Android
 - Kotlin
