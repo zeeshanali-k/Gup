@@ -7,6 +7,7 @@ import com.pusher.client.PusherOptions
 import com.pusher.client.connection.ConnectionEventListener
 import com.pusher.client.connection.ConnectionState
 import com.pusher.client.connection.ConnectionStateChange
+import com.techsensei.data.BuildConfig
 import com.techsensei.data.network.ChatClient
 import com.techsensei.data.network.dto.ChatEvent
 import com.techsensei.data.network.dto.toChat
@@ -69,11 +70,12 @@ class ChatRepositoryImpl(private val chatClient: ChatClient) : ChatRepository {
     override fun registerChatEvent(roomId: Int): Flow<Resource<Chat>> = callbackFlow {
         val options = PusherOptions()
         options.setCluster("mt1")
-        options.setHost("192.168.8.102")
-        options.setWsPort(6001).isUseTLS = false
-        options.setWssPort(6001).activityTimeout = 5000
+        options.setHost(BuildConfig.PUSHER_URL) //TODO change pusher url value to your server url in "gradle.properties" file
+        options.setWsPort(6001).isUseTLS = false //TODO if you are using some other port for websocket change port
+        options.setWssPort(6001).activityTimeout = 5000 //TODO if you are using some other port for websocket change port
 
-        val pusher = Pusher("abc", options)
+        val pusher = Pusher("abc", options) // api key same as server it can be anything you should use
+        //something complex for production apps
         pusher.connect(object : ConnectionEventListener {
             override fun onConnectionStateChange(change: ConnectionStateChange) {
                 Log.d(
@@ -94,8 +96,9 @@ class ChatRepositoryImpl(private val chatClient: ChatClient) : ChatRepository {
                 trySend(Resource.Error("Failed to Connect: $message"))
             }
         }, ConnectionState.ALL)
-        val channel = pusher.subscribe("chat_${roomId}")
-        channel.bind("App\\Events\\ChatEvent") { event ->
+        val channel = pusher.subscribe("chat_${roomId}")//TODO you can change channel name according to server
+        channel.bind("App\\Events\\ChatEvent") { event -> //TODO you can change event name
+            //according to server
             Log.d(TAG, "Received Data: " + event.data)
             Log.d(
                 TAG, "Received Data: "

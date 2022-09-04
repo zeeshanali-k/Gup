@@ -1,8 +1,5 @@
 package com.techsensei.gupp.main.chat
 
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -16,12 +13,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -31,12 +26,9 @@ import com.techsensei.gupp.R
 import com.techsensei.gupp.main.chat.components.ChatsListItem
 import com.techsensei.gupp.main.chat.components.GoToTopButton
 import com.techsensei.gupp.ui.theme.AppBg
-import com.techsensei.gupp.ui.theme.IconImageColor
 import com.techsensei.gupp.ui.theme.PrimaryDark
-import com.techsensei.gupp.utils.PrefsProvider
 import com.techsensei.gupp.utils.Screen
 import com.techsensei.gupp.utils.constants.ArgConstants
-import com.techsensei.gupp.utils.constants.PrefConstants
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -48,16 +40,9 @@ private const val TAG = "ChatsTab"
 fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val chatsState = chatsViewModel.chatsState
-    val currentUserId = remember {
-        PrefsProvider(context).getInt(PrefConstants.USER_ID)
-    }
 
     LaunchedEffect(key1 = true) {
-//        if (chatsState.value.chats!=null) return@LaunchedEffect
-        chatsViewModel.getUserChats(
-            PrefsProvider(context)
-                .getInt(PrefConstants.USER_ID)
-        )
+        chatsViewModel.getUserChats()
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -80,22 +65,6 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                     .fillMaxSize()
                     .background(AppBg),
                 scaffoldState = scaffoldState,
-                /*floatingActionButton = {
-                    if (chatsStateVal.message == null) {
-                        FloatingActionButton(onClick = {
-                            Toast.makeText(
-                                context,
-                                "Message",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_round_chat_24),
-                                contentDescription = "Start New Chat", tint = IconImageColor
-                            )
-                        }
-                    }
-                }*/
             ) {
                 Box(
                     Modifier
@@ -122,7 +91,7 @@ fun ChatsTab(navController: NavController, chatsViewModel: ChatsViewModel = hilt
                                             this.popExit = R.anim.onesignal_fade_in
                                         }
                                     }
-                                }, room = room, currentUserId = currentUserId)
+                                }, room = room, currentUserId = chatsViewModel.currentUserId)
                             }
                         }
 //            Go to top button

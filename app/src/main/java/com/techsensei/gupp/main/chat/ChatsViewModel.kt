@@ -5,8 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.techsensei.data.utils.PrefsProvider
 import com.techsensei.domain.model.Resource
 import com.techsensei.domain.use_case.chat.GetAllChats
+import com.techsensei.gupp.utils.constants.PrefConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -16,20 +18,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatsViewModel @Inject constructor(
     private val getAllChats: GetAllChats,
+    private val prefsProvider: PrefsProvider
 //    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _chatsState: MutableState<ChatsState?> = mutableStateOf(null)
     val chatsState: State<ChatsState?> = _chatsState
     private val TAG = "ChatsViewModel"
+    val currentUserId = prefsProvider.getInt(PrefConstants.USER_ID)
 
-    fun getUserChats(userId: Int) {
+
+    fun getUserChats() {
 //        val userId = savedStateHandle.get<Int>(ArgConstants.USER_ID)!!
 //        Log.d(TAG, "user id: $userId")
 //        _chatsState.value = ChatsState(isLoading = true)
 //        if (chatsState.value?.chats!=null) return
         viewModelScope.launch(Dispatchers.IO) {
-            getAllChats(userId).collectLatest {
+            getAllChats(prefsProvider.getInt(PrefConstants.USER_ID)).collectLatest {
                 when (it) {
                     is Resource.Success -> _chatsState.value = chatsState.value
                         ?.copy(

@@ -16,6 +16,7 @@ android {
         versionName "1.0"
 
         buildConfigField("String", "APP_BASE_URL", APP_BASE_URL)
+        buildConfigField("String", "PUSHER_URL", PUSHER_URL)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

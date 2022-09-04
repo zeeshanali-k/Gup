@@ -30,11 +30,12 @@ object AppModule {
             .addNetworkInterceptor(httpLoggingInterceptor)
             .build()
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.APP_BASE_URL)
+            .baseUrl(BuildConfig.APP_BASE_URL)//TODO change server base url value to your server url in "gradle.properties" file
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
 
     //    Client
     @Singleton
