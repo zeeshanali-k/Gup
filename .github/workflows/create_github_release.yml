@@ -18,9 +18,6 @@ jobs:
 
       - name: Grant Permission to Execute
         run: chmod +x gradlew
-        
-      - name: Grant Permission to Execute
-        run: echo ${{ secrets.GH_TOKEN_RELEASE }}
       - name: Build debug APK
         run: bash ./gradlew assembleDebug --stacktrace
         
