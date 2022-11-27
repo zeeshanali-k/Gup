@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 class PrefsProvider(val context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-        "MBHelperPrefs",
+        "GupPrefs",
         MODE_PRIVATE
     )
 
